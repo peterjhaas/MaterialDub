@@ -9,7 +9,7 @@
 #
 # The shell defaults to a single source and single destination.  If you would like multiple dubs, un-comment the correct lines noted below.
 
-# FILES TO SYNC
+# .CONFIG (this should be moved to a config file in v.1.5)
 # Modify this section to represent the necessary paths for file dubs.
 # Define the source drive location - make sure this path leads to the primary source materials.
 #	Make sure to turn on the target drives you want to include.
