@@ -60,3 +60,6 @@ rsync -av --checksum --progress --log-file=$myLOG --log-file-format='%i --File: 
 
 #Close out the Process.
 echo "\n## Process Complete!\n* Please review details in the log-file located at:\n"$myLOG"\n"
+
+clear
+cat $myLOG
