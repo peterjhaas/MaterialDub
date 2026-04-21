@@ -10,11 +10,11 @@
 # Define the target drive location 
 # Define location of the log files
 
-dirSOURCE=("/Volumes/26F/Day01")							# Where does it come from? (That is to say, the source).
-dirTARGET=("/Volumes/Leviathan/26F/")						# Where does it go?
+dirSOURCE=("/Volumes/TK/")							# Where does it come from? (That is to say, the source).
+dirTARGET=("/Volumes/TK")						# Where does it go?
 # dirTARGET2=("/Volumes/TK/")								# turn on this line to enable a second round of rsync to another drive.
 # dirTARGET3=("/Volumes/TK/")								# turn on this line to enable a third round of rsync to another drive.
-dirLOG=("/Volumes/26F/Logs/")								# Tell me what happened (Cotten-Eyed Joe) 
+dirLOG=("/Volumes/TK/")								# Tell me what happened
 
 
 
@@ -34,7 +34,7 @@ unbold=$(tput sgr0)
 clear
 echo "${BLUE}${bold}# Media Dub ${unbold}${NC}"			# give ourselves a nice little title.
 echo " "
-echo 'Media Dub\n'$myDate'\n***' >> $myLOG 
+echo '# Media Dub\n'$myDate'\n***' >> $myLOG 
 echo "${BLUE}## Directory Information${NC}"
 echo "* Log File Directory: " $dirLOG | tee -a $myLOG 
 echo "* Source Sync/Dub File Directory: "$dirSOURCE | tee -a $myLOG
