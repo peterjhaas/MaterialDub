@@ -1,62 +1,62 @@
-# Custom RSYNC for feature film project 2026
-# This template can be modified to make copying files easy and sane.  
-# What is nice is that it can be done on any terminal based machine and doesn't require extensive software licenses, only that you have your directories organized.
-
-
+# Media Dub, originally called FeatureSync
+# Created by Peter J. Haas (https://www.peterjhaas.com)
+# I wanted to create a tool that would simplify the process of dubbing safety copies of media materials.
+#
+# Custom RSYNC for use by creative post-production and DIT teams for low-budget media projects. 
+# This shell will read the SOURCE directory such as media card (CF/SD/etc.,) and dub the files to new target directories.
+# The dubbing process will skip over any previously existing files that have not been modified, allowing for cleaner copies and more frequent backups on set without worrying about formatting cards.
+# We developed this as we are shooting DVCAM to CF, and each card can hold more than one day's worth of footage.  It allows CF cards to become a temporary "emergency primary source" backup.
+#
+# The shell defaults to a single source and single destination.  If you would like multiple dubs, un-comment the correct lines noted below.
 
 # FILES TO SYNC
-# Modify this section to represent the necessary paths for file transfer.
-# Define the source drive location
-# Define the target drive location 
+# Modify this section to represent the necessary paths for file dubs.
+# Define the source drive location - make sure this path leads to the primary source materials.
+#	Make sure to turn on the target drives you want to include.
+# Define the target drive locations - point each of these to the drives you wish to dub materials to.
 # Define location of the log files
 
-dirSOURCE=("/Volumes/TK/")							# Where does it come from? (That is to say, the source).
-dirTARGET=("/Volumes/TK")						# Where does it go?
-# dirTARGET2=("/Volumes/TK/")								# turn on this line to enable a second round of rsync to another drive.
-# dirTARGET3=("/Volumes/TK/")								# turn on this line to enable a third round of rsync to another drive.
-dirLOG=("/Volumes/TK/")								# Tell me what happened
+dirSOURCE=("/Volumes/TK/")			
+dirTARGET=("/Volumes/TK/")
+# dirTARGET2=("/Volumes/TK/")							
+# dirTARGET3=("/Volumes/TK/")							
+dirLOG=("/Volumes/26F/Logs/")								
 
-
-
-# !!! WARNING !!! DON'T TOUCH BELOW UNLESS YOU KNOW WHAT YOU'RE DOING !!! You have been warned.
 
 # System definitions for building a log-file
-myDate=$(date "+%Y-%m-%d_[%H.%M.%S]")_logFile.txt			
-myLOG=${dirLOG}${myDate}
+myDate=$(date "+%Y-%m-%d_[%H.%M.%S]")	
+myAPND=('_logFile.txt')
+myLOG=${dirLOG}${myDate}${myAPND}
 
-#Text Formatting for UX
-NC='\033[0m' # No Color
-BLUE='\033[0;34m'
-bold=$(tput bold)
-unbold=$(tput sgr0)
-
+# clear the screen
+# give ourselves a nice little title and report key directory information both to screen and to the log-file.
 
 clear
-echo "${BLUE}${bold}# Media Dub ${unbold}${NC}"			# give ourselves a nice little title.
-echo " "
-echo '# Media Dub\n'$myDate'\n***' >> $myLOG 
-echo "${BLUE}## Directory Information${NC}"
-echo "* Log File Directory: " $dirLOG | tee -a $myLOG 
-echo "* Source Sync/Dub File Directory: "$dirSOURCE | tee -a $myLOG
-echo "* Target Sync/Dub File Directory: "$dirTARGET | tee -a $myLOG
-# reserved for Targets 2 and 3 
-echo '\n***' >> $myLOG 
-echo " "
-echo "${BLUE}## Processing Dub Info ${NC}"
-echo "* Gathering log-file information:" $myDate			# test code to check
-echo "* Processing Checksum, please wait..."
-echo " "
+echo "# Media Dub\n\n## Session Information\n* No.: "$myDate"\n* Log File Directory: "$dirLOG "\n* Source Sync/Dub File Directory: "$dirSOURCE "\n* Target Sync/Dub File Directory: "$dirTARGET | tee -a $myLOG
+# Turn on for Destination Targets 2 and 3 
+# echo "* Target Sync/Dub File Directory: "$dirTARGET2 | tee -a $myLOG
+# echo "* Target Sync/Dub File Directory: "$dirTARGET3 | tee -a $myLOG
+echo '\n' | tee -a $myLOG
+
+
 
 # MATERIAL DUBS
 # Primary Material Dub
-echo "${BLUE}## Dubbing to Primary Materials Drive${NC}"
-rsync -av --checksum --progress --log-file=/Volumes/26F/Logs/$myDate --log-file-format='%i --File: %f [%o | %l | %i] %c' $dirSOURCE $dirTARGET
+echo "## Dubbing to First Materials Drive" | tee -a $myLOG
+echo "* Preparing Dub...\n"
+
+rsync -av --checksum --progress --log-file=$myLOG --log-file-format='%i --File: %f [%o | %l | %i] %c' $dirSOURCE $dirTARGET
 	
-# TO DO: Second and Third Dub destinations.
+# Turn on for second destination dub
+# echo "## Dubbing to Second Materials Drive" | tee -a $myLOG
+# echo "* Preparing Dub...\n"
+# rsync -av --checksum --progress --log-file=$myLOG --log-file-format='%i --File: %f [%o | %l | %i] %c' $dirSOURCE $dirTARGET2
+
+# Turn on for third destination dub
+# echo "## Dubbing to Third Materials Drive" | tee -a $myLOG
+# echo "* Preparing Dub...\n"
+# rsync -av --checksum --progress --log-file=$myLOG --log-file-format='%i --File: %f [%o | %l | %i] %c' $dirSOURCE $dirTARGET3
+
 
 #Close out the Process.
-echo " "
-echo "${BLUE}## Process Complete!${NC}"
-echo "* Please review details in the log-file located at:" 
-echo "  " $myLOG
-echo " "
+echo "\n## Process Complete!\n* Please review details in the log-file located at:\n"$myLOG"\n"
